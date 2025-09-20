@@ -1,0 +1,22 @@
+{
+    "item" : [
+        {
+            "id": 1,
+            "name" : "Indomie Goreng",
+            "price" : 2300,
+            "qty": 20
+        },
+        {
+            "id": 2,
+            "name" : "Indomie Rendang",
+            "price" : 2500,
+            "qty": 20
+        },
+        {
+            "id": 3,
+            "name" : "Sokul",
+            "price" : 10000,
+            "qty": 100
+        }
+    ]
+}

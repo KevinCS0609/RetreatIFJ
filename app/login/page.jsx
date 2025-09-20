@@ -23,8 +23,8 @@ export default function LoginPage(){
     return (
         <>
             <div className="w-full min-h-screen flex justify-center">
-                <div className="w-3/3 min-h-screen flex-row flex justify-center items-center">
-                    <div className="w-1/3 h-96 bg-white rounded-lg grid-rows-3 justify-center items-center">
+                <div className="w-3/3 min-h-screen flex-row flex justify-center items-center bg-gray-200">
+                    <div className="w-1/3 h-96 bg-white rounded-lg grid-rows-3 justify-center items-center  ">
                         <form action="" onSubmit={handleSubmit}>
                             <div className="flex justify-center py-5 mt-3">
                                 <p className="text-black font-bold text-3xl">Retreat IFJ</p>
