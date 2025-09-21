@@ -17,14 +17,19 @@ export default function LoginPage(){
 
     const handleSubmit = (e) =>{
         e.preventDefault();
-        router.push("/user");
+        if(data.email === "admin" && data.password === "admin"){
+            router.push("/admin");
+        }
+        else{
+            router.push("/user");
+        }
     }
 
     return (
         <>
             <div className="w-full min-h-screen flex justify-center">
-                <div className="w-3/3 min-h-screen flex-row flex justify-center items-center bg-gray-200">
-                    <div className="w-1/3 h-96 bg-white rounded-lg grid-rows-3 justify-center items-center  ">
+                <div className="w-full min-h-screen flex-row flex justify-center items-center bg-[url(/istts.png)] bg-no-repeat bg-cover">
+                    <div className="w-1/3 h-96 bg-gray-200/40 rounded-lg grid-rows-3 justify-center items-center">
                         <form action="" onSubmit={handleSubmit}>
                             <div className="flex justify-center py-5 mt-3">
                                 <p className="text-black font-bold text-3xl">Retreat IFJ</p>
@@ -37,7 +42,7 @@ export default function LoginPage(){
                                     placeholder="Masukkan Email"
                                     value={data.email}
                                     onChange={(e) => setOnChange("email", e.target.value)}
-                                    className="placeholder-gray-300 text-black focus:placeholder-black border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm p-2 px-3 w-full text-sm" />
+                                    className="bg-white placeholder-gray-300 text-black focus:placeholder-black border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm p-2 px-3 w-full text-sm" />
                             </div>
                             <div className="flex justify-center px-6 flex-col mb-5 gap-2">
                                 <label htmlFor="password" className="text-black">Password</label>
@@ -47,7 +52,7 @@ export default function LoginPage(){
                                     value={data.password} 
                                     onChange={(e) => setOnChange("password", e.target.value)}
                                     placeholder="Masukkan password"
-                                    className="placeholder-gray-300 text-black focus:placeholder-black border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm p-2 px-3 w-full text-sm" />
+                                    className="bg-white placeholder-gray-300 text-black focus:placeholder-black border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm p-2 px-3 w-full text-sm" />
                             </div>
                             <div className="flex justify-center py-5">
                                 <input

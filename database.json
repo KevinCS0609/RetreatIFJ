@@ -4,19 +4,55 @@
             "id": 1,
             "name" : "Indomie Goreng",
             "price" : 2300,
-            "qty": 20
+            "qty": 20,
+            "kategori": "Makanan"
         },
         {
             "id": 2,
             "name" : "Indomie Rendang",
             "price" : 2500,
-            "qty": 20
+            "qty": 20,
+            "kategori": "Makanan"
         },
         {
             "id": 3,
             "name" : "Sokul",
             "price" : 10000,
-            "qty": 100
+            "qty": 100,
+            "kategori": "Minuman"
+        }
+    ],
+    "transaction" : [
+        {
+            "id" : 1,
+            "items" : [
+                {
+                    "itemId" : 1,
+                    "qty" : 2
+                },
+                {
+                    "itemId" : 3,
+                    "qty" : 1
+                }
+            ],
+            "subtotal" : 15000,
+            "deskripsi" : "Beli Indomie Goreng 2 dan Sokul 1"
+        },  
+        {
+            "id" : 2,
+            "items" : [
+                {
+                    "itemId" : 1,
+                    "qty" : 2
+                },
+                {
+                    "itemId" : 3,
+                    "qty" : 1
+                }
+            ],
+            "subtotal" : 20000,
+            "deskripsi" : "Beli Indomie Goreng 2 dan Sokul 1"
         }
     ]
+    
 }

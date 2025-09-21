@@ -14,7 +14,7 @@ export default function DashboardLayout({children}){
                     </p>
                 </div>
                 <div>
-                    <button className="bg-white text-black px-3 py-1 rounded-lg font-semibold hover:bg-gray-200 duration-300" onClick={route.push("/login")}>Logout</button>
+                    <button className="bg-white text-black px-3 py-1 rounded-lg font-semibold hover:bg-gray-200 duration-300" onClick={() => route.push("/login")}>Logout</button>
                 </div>
             </div>
             <div>

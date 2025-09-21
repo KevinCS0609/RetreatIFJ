@@ -16,6 +16,10 @@ import { NextRequest, NextResponse } from 'next/server'
     // if(pathname.startsWith('/login')){
     //     console.log('Login page, allow access')
     // }
+
+    // if(request.nextUrl.pathname.startsWith('/')){
+    //     return NextResponse.redirect(new URL('/login', request.url));
+    // }
 }
 
 export const config = {
