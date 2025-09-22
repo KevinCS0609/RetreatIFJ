@@ -15,15 +15,39 @@ export default function LoginPage(){
         setData({...data, [field] : value})
     }
 
-    const handleSubmit = (e) =>{
+    // const handleSubmit = (e) =>{
+    //     e.preventDefault();
+    //     if(data.email === "admin" && data.password === "admin"){
+    //         router.push("/admin");
+    //     }
+    //     else{
+    //         router.push("/user");
+    //     }
+    // }
+
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if(data.email === "admin" && data.password === "admin"){
-            router.push("/admin");
+        setError('');
+
+        const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username, password }),
+        });
+
+        if (response.ok) {
+            router.push('/admin');
+        } else {
+            const data = await response.json();
+            setError(data.message);
         }
-        else{
-            router.push("/user");
-        }
-    }
+    };
 
     return (
         <>
@@ -40,8 +64,8 @@ export default function LoginPage(){
                                     type="text" 
                                     id="email" 
                                     placeholder="Masukkan Email"
-                                    value={data.email}
-                                    onChange={(e) => setOnChange("email", e.target.value)}
+                                    value={username}
+                                    onChange={(e) => setUsername(e.target.value)}
                                     className="bg-white placeholder-gray-300 text-black focus:placeholder-black border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm p-2 px-3 w-full text-sm" />
                             </div>
                             <div className="flex justify-center px-6 flex-col mb-5 gap-2">
@@ -49,8 +73,8 @@ export default function LoginPage(){
                                 <input 
                                     type="password" 
                                     id="password"
-                                    value={data.password} 
-                                    onChange={(e) => setOnChange("password", e.target.value)}
+                                    value={password} 
+                                    onChange={(e) => setPassword(e.target.value)}
                                     placeholder="Masukkan password"
                                     className="bg-white placeholder-gray-300 text-black focus:placeholder-black border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm p-2 px-3 w-full text-sm" />
                             </div>
@@ -58,7 +82,7 @@ export default function LoginPage(){
                                 <input
                                     type="submit" 
                                     className="bg-green-600 rounded-lg text-white font-bold py-2 hover:bg-green-700 duration-300 px-10 disabled:opacity-50 disabled:cursor-not-allowed" 
-                                    disabled={ !data.password || !data.email ? true : false }
+                                    disabled={ !username || !password ? true : false }
                                     value={"Login"}
                                 />
                             </div>
