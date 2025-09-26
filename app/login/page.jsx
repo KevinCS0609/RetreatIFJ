@@ -1,95 +1,97 @@
-"use client"
+"use client";
 
-import { useEffect, useRef, useState } from "react";
-import {useForm} from 'react-hook-form';
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function LoginPage(){
-    const router = useRouter();
-    const [data, setData] = useState({
-        email : "",
-        password : ""
-    })
+export default function LoginPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-    const setOnChange = (field, value) => {
-        setData({...data, [field] : value})
-    }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
 
-    // const handleSubmit = (e) =>{
-    //     e.preventDefault();
-    //     if(data.email === "admin" && data.password === "admin"){
-    //         router.push("/admin");
-    //     }
-    //     else{
-    //         router.push("/user");
-    //     }
-    // }
+    try {
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
+      const data = await response.json();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError('');
+      if (response.ok) {
+        localStorage.setItem("token", data.token);
 
-        const response = await fetch('/api/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ username, password }),
-        });
-
-        if (response.ok) {
-            router.push('/admin');
+        if (data.role === "admin") {
+          router.push("/admin");
+        } else if (data.role === "kasir") {
+          router.push("/kasir");
         } else {
-            const data = await response.json();
-            setError(data.message);
+          setError("Role tidak dikenali");
         }
-    };
+      } else {
+        setError(data.message || "Login gagal");
+      }
+    } catch (err) {
+      setError("Terjadi kesalahan server");
+    }
+  };
 
-    return (
-        <>
-            <div className="w-full min-h-screen flex justify-center">
-                <div className="w-full min-h-screen flex-row flex justify-center items-center bg-[url(/istts.png)] bg-no-repeat bg-cover">
-                    <div className="w-1/3 h-96 bg-gray-200/40 rounded-lg grid-rows-3 justify-center items-center">
-                        <form action="" onSubmit={handleSubmit}>
-                            <div className="flex justify-center py-5 mt-3">
-                                <p className="text-black font-bold text-3xl">Retreat IFJ</p>
-                            </div>
-                            <div className="flex justify-center py-5 px-6 flex-col gap-2">
-                                <label htmlFor="email" className="text-black">Email</label>
-                                <input 
-                                    type="text" 
-                                    id="email" 
-                                    placeholder="Masukkan Email"
-                                    value={username}
-                                    onChange={(e) => setUsername(e.target.value)}
-                                    className="bg-white placeholder-gray-300 text-black focus:placeholder-black border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm p-2 px-3 w-full text-sm" />
-                            </div>
-                            <div className="flex justify-center px-6 flex-col mb-5 gap-2">
-                                <label htmlFor="password" className="text-black">Password</label>
-                                <input 
-                                    type="password" 
-                                    id="password"
-                                    value={password} 
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    placeholder="Masukkan password"
-                                    className="bg-white placeholder-gray-300 text-black focus:placeholder-black border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm p-2 px-3 w-full text-sm" />
-                            </div>
-                            <div className="flex justify-center py-5">
-                                <input
-                                    type="submit" 
-                                    className="bg-green-600 rounded-lg text-white font-bold py-2 hover:bg-green-700 duration-300 px-10 disabled:opacity-50 disabled:cursor-not-allowed" 
-                                    disabled={ !username || !password ? true : false }
-                                    value={"Login"}
-                                />
-                            </div>
-                        </form>
-                    </div>
-                </div>
+  return (
+    <div className="w-full min-h-screen flex justify-center">
+      <div className="w-full min-h-screen flex-row flex justify-center items-center bg-[url(/istts.png)] bg-no-repeat bg-cover">
+        <div className="w-1/3 h-auto bg-gray-200/40 rounded-lg p-6">
+          <form onSubmit={handleSubmit}>
+            <div className="flex justify-center py-5 mt-3">
+              <p className="text-black font-bold text-3xl">Retreat IFJ</p>
             </div>
-        </>
-    )
+
+            <div className="flex flex-col gap-2 mb-4">
+              <label htmlFor="email" className="text-black">
+                Email
+              </label>
+              <input
+                type="text"
+                id="email"
+                placeholder="Masukkan Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="bg-white placeholder-gray-300 text-black focus:placeholder-black border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm p-2 px-3 w-full text-sm"
+              />
+            </div>
+
+            <div className="flex flex-col gap-2 mb-5">
+              <label htmlFor="password" className="text-black">
+                Password
+              </label>
+              <input
+                type="password"
+                id="password"
+                placeholder="Masukkan password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="bg-white placeholder-gray-300 text-black focus:placeholder-black border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm p-2 px-3 w-full text-sm"
+              />
+            </div>
+
+            {error && (
+              <p className="text-red-600 text-sm mb-3 text-center">{error}</p>
+            )}
+
+            <div className="flex justify-center">
+              <input
+                type="submit"
+                className="bg-green-600 rounded-lg text-white font-bold py-2 hover:bg-green-700 duration-300 px-10 disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={!email || !password}
+                value="Login"
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
 }
