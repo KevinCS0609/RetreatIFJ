@@ -59,7 +59,7 @@ export default function TransactionContent({ transactions }) {
         .filter((t) => t.paymentMethod === "Cash")
         .reduce((acc, curr) => acc + curr.total, 0),
       totalDigital: completedTransactions
-        .filter((t) => t.paymentMethod !== "Cash")
+        .filter((t) => t.paymentMethod === "E-Wallet" || t.paymentMethod === "Transfer")
         .reduce((acc, curr) => acc + curr.total, 0),
       totalRevenue: completedTransactions.reduce(
         (acc, curr) => acc + curr.total,

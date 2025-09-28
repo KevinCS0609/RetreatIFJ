@@ -151,14 +151,7 @@ export default function CatalogContent({ products = [] }) {
         subtotal,
         total: subtotal,
         paymentMethod,
-        timestamp: new Date().toLocaleString("id-ID", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-        }),
+        timestamp: new Date(),
       };
 
       const response = await fetch("/api/transactions", {
@@ -317,7 +310,7 @@ export default function CatalogContent({ products = [] }) {
                 >
                   <option value="Cash">💵 Cash</option>
                   <option value="Transfer">🏦 Transfer Bank</option>
-                  <option value="E_Wallet">
+                  <option value="E-Wallet">
                     📱 E-Wallet (OVO, GoPay, DANA)
                   </option>
                 </select>
