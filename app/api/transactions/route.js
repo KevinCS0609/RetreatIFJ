@@ -62,8 +62,22 @@ export async function POST(req) {
         total: Number(total),
         paymentMethod,
         paymentStatus: "Completed",
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: new Date().toLocaleString("id-ID", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        }),
+        updatedAt: new Date().toLocaleString("id-ID", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        }),
       };
 
       // Simpan Transaksi
@@ -103,7 +117,6 @@ export async function POST(req) {
   }
 }
 
-
 // GET ALL DATA TRANSACTIONS
 export async function GET() {
   try {
@@ -124,6 +137,7 @@ export async function GET() {
       total: t.total,
       paymentMethod: t.paymentMethod,
       paymentStatus: t.paymentStatus,
+      createdAt: t.createdAt,
     }));
 
     return NextResponse.json(

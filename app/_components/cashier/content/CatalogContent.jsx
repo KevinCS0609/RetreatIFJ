@@ -37,22 +37,26 @@ const ProductCard = ({ product, onAddToCart }) => {
         <p className="text-emerald-600 font-bold text-sm mb-2">
           {formatCurrency(product.price)}
         </p>
-        <p className={`text-sm mb-3 ${isOutOfStock ? 'text-red-500' : 'text-gray-500'}`}>
-            Stok: {Number(product.stock || 0)}
-            {isOutOfStock && ' (Habis)'}
-          </p>
+        <p
+          className={`text-sm mb-3 ${
+            isOutOfStock ? "text-red-500" : "text-gray-500"
+          }`}
+        >
+          Stok: {Number(product.stock || 0)}
+          {isOutOfStock && " (Habis)"}
+        </p>
         <div className="mt-auto">
           <button
             onClick={() => onAddToCart(product)}
             disabled={isOutOfStock}
             className={`w-full font-semibold py-2 px-4 rounded-lg text-sm transition-colors duration-300 flex items-center justify-center gap-2 ${
-                isOutOfStock 
-                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  : 'bg-emerald-600 text-white hover:bg-emerald-700'
-              }`}
+              isOutOfStock
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : "bg-emerald-600 text-white hover:bg-emerald-700"
+            }`}
           >
             <PlusCircle size={16} />
-            <span>{isOutOfStock ? 'Habis' : 'Tambah'}</span>
+            <span>{isOutOfStock ? "Habis" : "Tambah"}</span>
           </button>
         </div>
       </div>
@@ -63,10 +67,10 @@ const ProductCard = ({ product, onAddToCart }) => {
 export default function CatalogContent({ products = [] }) {
   const [cart, setCart] = useState([]);
   const [customerName, setCustomerName] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("cash");
+  const [paymentMethod, setPaymentMethod] = useState("Cash");
   const [searchTerm, setSearchTerm] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
-   const [localProducts, setLocalProducts] = useState(products);
+  const [localProducts, setLocalProducts] = useState(products);
 
   // Function untuk menambah produk ke keranjang
   const handleAddToCart = (product) => {
@@ -113,13 +117,13 @@ export default function CatalogContent({ products = [] }) {
 
   // Function untuk update stock lokal
   const updateLocalStock = (cartItems) => {
-    setLocalProducts(prevProducts => 
-      prevProducts.map(product => {
-        const cartItem = cartItems.find(item => item.id === product.id);
+    setLocalProducts((prevProducts) =>
+      prevProducts.map((product) => {
+        const cartItem = cartItems.find((item) => item.id === product.id);
         if (cartItem) {
-          return { 
-            ...product, 
-            stock: Math.max(0, product.stock - cartItem.quantity) 
+          return {
+            ...product,
+            stock: Math.max(0, product.stock - cartItem.quantity),
           };
         }
         return product;
@@ -147,7 +151,14 @@ export default function CatalogContent({ products = [] }) {
         subtotal,
         total: subtotal,
         paymentMethod,
-        timestamp: new Date().toISOString(),
+        timestamp: new Date().toLocaleString("id-ID", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        }),
       };
 
       const response = await fetch("/api/transactions", {
@@ -168,7 +179,7 @@ export default function CatalogContent({ products = [] }) {
       alert(`Transaksi berhasil! ID: ${result.transactionId}`);
       setCart([]);
       setCustomerName("");
-      setPaymentMethod("cash");
+      setPaymentMethod("Cash");
     } catch (error) {
       console.error("Error:", error);
       alert(`Error: ${error.message}`);
@@ -304,7 +315,7 @@ export default function CatalogContent({ products = [] }) {
                   onChange={(e) => setPaymentMethod(e.target.value)}
                   className="w-full px-4 py-2.5 pr-10 border border-gray-300 rounded-lg bg-white text-gray-900 text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 appearance-none cursor-pointer hover:border-gray-400"
                 >
-                  <option value="Cassh">💵 Cash</option>
+                  <option value="Cash">💵 Cash</option>
                   <option value="Transfer">🏦 Transfer Bank</option>
                   <option value="E_Wallet">
                     📱 E-Wallet (OVO, GoPay, DANA)
@@ -413,7 +424,7 @@ export default function CatalogContent({ products = [] }) {
                   disabled={isProcessing}
                   className="w-full bg-emerald-600 text-white font-bold py-3 mt-4 rounded-lg hover:bg-emerald-700 transition-colors duration-300"
                 >
-                  {isProcessing ? 'Memproses...' : 'Proses Transaksi'}
+                  {isProcessing ? "Memproses..." : "Proses Transaksi"}
                 </button>
               </div>
             )}
