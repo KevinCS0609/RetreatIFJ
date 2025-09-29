@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import AdminLayout from "../../_components/admin/AdminLayout";
+import AdminLayout from "../../_components/_admin/AdminLayout";
 
 export default function AdminPage() {
     const [user, setUser] = useState(null);
@@ -10,18 +10,15 @@ export default function AdminPage() {
     const router = useRouter();
 
     useEffect(() => {
-        // Fungsi untuk mengambil data user dari token
         const getUserFromToken = () => {
             try {
                 const token = localStorage.getItem("token");
                 
                 if (!token) {
-                    // Jika tidak ada token, redirect ke login
                     router.push("/login");
                     return;
                 }
 
-                // Decode JWT token (tanpa verifikasi - hanya untuk mendapatkan payload)
                 const base64Url = token.split('.')[1];
                 const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
                 const jsonPayload = decodeURIComponent(
@@ -37,7 +34,6 @@ export default function AdminPage() {
                 console.log('User data from token:', userData);
                 
                 
-                // Periksa apakah token sudah expired
                 const currentTime = Date.now() / 1000;
                 if (userData.exp < currentTime) {
                     // Token expired, redirect ke login
@@ -46,7 +42,6 @@ export default function AdminPage() {
                     return;
                 }
 
-                // Periksa apakah user adalah admin
                 if (userData.role !== "admin") {
                     router.push("/login");
                     return;
@@ -65,7 +60,6 @@ export default function AdminPage() {
         getUserFromToken();
     }, [router]);
 
-    // Tampilkan loading saat masih memproses
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-screen">
@@ -74,7 +68,6 @@ export default function AdminPage() {
         );
     }
 
-    // Jika user tidak ada, tidak menampilkan apapun (akan redirect)
     if (!user) {
         return null;
     }
