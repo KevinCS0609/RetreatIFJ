@@ -1,7 +1,10 @@
+// app/api/login/route.js
+
 import clientPromise from "../../lib/mongodb.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
+import { cookies } from 'next/headers';
 
 export async function POST(req) {
   try {
@@ -24,6 +27,14 @@ export async function POST(req) {
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
+
+    cookies().set("token", token, {
+      httpOnly: true, // tidak bisa diakses via JS
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      path: "/",
+      maxAge: 60 * 60, // 1 jam
+    });
 
     return NextResponse.json({
       message: "Login berhasil",

@@ -10,54 +10,35 @@ export default function AdminPage() {
     const router = useRouter();
 
     useEffect(() => {
-        const getUserFromToken = () => {
+        const fetchUserData = async () => {
             try {
-                const token = localStorage.getItem("token");
-                
-                if (!token) {
-                    router.push("/login");
+                const res = await fetch("/api/me");
+
+                if (!res.ok) {
+                    console.error("Authentication failed:", res.statusText);
+                    router.replace("/login");
                     return;
                 }
 
-                const base64Url = token.split('.')[1];
-                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-                const jsonPayload = decodeURIComponent(
-                    atob(base64)
-                        .split('')
-                        .map(function(c) {
-                            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-                        })
-                        .join('')
-                );
+                const data = await res.json();
+                // console.log('User data from /api/me:', data);
 
-                const userData = JSON.parse(jsonPayload);
-                console.log('User data from token:', userData);
-                
-                
-                const currentTime = Date.now() / 1000;
-                if (userData.exp < currentTime) {
-                    // Token expired, redirect ke login
-                    localStorage.removeItem("token");
-                    router.push("/login");
+                if (data.role !== "admin") {
+                    console.warn("User is not an admin, redirecting.");
+                    router.replace("/login");
                     return;
                 }
 
-                if (userData.role !== "admin") {
-                    router.push("/login");
-                    return;
-                }
-
-                setUser(userData);
+                setUser(data.user);
                 setLoading(false);
 
             } catch (error) {
-                console.error("Error decoding token:", error);
-                localStorage.removeItem("token");
-                router.push("/login");
+                console.error("Error fetching user data:", error);
+                router.replace("/login");
             }
         };
 
-        getUserFromToken();
+        fetchUserData();
     }, [router]);
 
     if (loading) {

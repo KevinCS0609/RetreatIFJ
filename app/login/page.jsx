@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ParticlesBackground from "./_particleBackground/ParticleBackground";
 
@@ -9,11 +9,34 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await fetch("/api/me");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.role === "admin") {
+            router.replace("/admin");
+          } else if (data.role === "kasir") {
+            router.replace("/cashier");
+          }
+        }
+      } catch (err) {
+        console.log("Belum login atau token tidak valid:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    checkAuth();
+  }, [router]);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-
+    setIsLoading(true);
     try {
       const response = await fetch("/api/login", {
         method: "POST",
@@ -22,14 +45,13 @@ export default function LoginPage() {
       });
 
       const data = await response.json();
+      // console.log("Login response:", data);
 
       if (response.ok) {
-        localStorage.setItem("token", data.token);
-
         if (data.role === "admin") {
-          router.push("/admin");
+          router.replace("/admin");
         } else if (data.role === "kasir") {
-          router.push("/kasir");
+          router.replace("/cashier");
         } else {
           setError("Role tidak dikenali");
         }
@@ -38,8 +60,18 @@ export default function LoginPage() {
       }
     } catch (err) {
       setError("Terjadi kesalahan server");
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="w-full min-h-screen flex justify-center items-center">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -83,16 +115,15 @@ export default function LoginPage() {
                 <p className="text-red-600 text-sm mb-3 text-center">{error}</p>
               )}
 
-              <div className="flex justify-center">
-                <input
-                  type="submit"
-                  className="bg-green-600 rounded-lg text-white font-bold py-2 hover:bg-green-700 duration-300 px-10 disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={!email || !password}
-                  value="Login"
-                />
-              </div>
-            </form>
-          </div>
+            <div className="flex justify-center">
+              <input
+                type="submit"
+                className="bg-green-600 rounded-lg text-white font-bold py-2 hover:bg-green-700 duration-300 px-10 disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={!email || !password || isLoading}
+                value="Login"
+              />
+            </div>
+          </form>
         </div>
       </div>
     </>
